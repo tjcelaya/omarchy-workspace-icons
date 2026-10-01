@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "tjcelaya.workspace-icons",
+  "name": "Workspace icons",
+  "version": "0.1.0",
+  "author": "tjcelaya",
+  "license": "MIT",
+  "description": "Workspace switcher that shows each workspace's number followed by the icons of the apps open on it.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Workspaces.qml"
+  },
+  "barWidget": {
+    "displayName": "Workspace icons",
+    "description": "Workspace numbers with the app icons on each. Terminals show the program running inside them.",
+    "category": "Compositor",
+    "allowMultiple": false,
+    "defaultSection": "left",
+    "defaults": {
+      "persistentWorkspaces": "1-5",
+      "separator": "|",
+      "dedupe": true,
+      "pollSec": 3,
+      "iconSize": 14,
+      "terminalClasses": "foot,footclient,Alacritty,kitty,com.mitchellh.ghostty",
+      "programIcons": ""
+    },
+    "schema": [
+      {
+        "key": "persistentWorkspaces",
+        "type": "string",
+        "label": "Workspaces always shown, even when empty (e.g. 1-5 or 1,2,3)",
+        "defaultValue": "1-5"
+      },
+      {
+        "key": "separator",
+        "type": "string",
+        "label": "Separator between workspaces",
+        "defaultValue": "|"
+      },
+      {
+        "key": "dedupe",
+        "type": "boolean",
+        "label": "One icon per app on a workspace",
+        "defaultValue": true
+      },
+      {
+        "key": "pollSec",
+        "type": "integer",
+        "label": "Seconds between checks of what runs inside terminals",
+        "min": 1,
+        "max": 60,
+        "step": 1,
+        "defaultValue": 3
+      },
+      {
+        "key": "iconSize",
+        "type": "integer",
+        "label": "Icon size (px)",
+        "min": 10,
+        "max": 24,
+        "step": 1,
+        "defaultValue": 14
+      },
+      {
+        "key": "terminalClasses",
+        "type": "string",
+        "label": "Window classes treated as terminals",
+        "defaultValue": "foot,footclient,Alacritty,kitty,com.mitchellh.ghostty"
+      },
+      {
+        "key": "programIcons",
+        "type": "string",
+        "label": "Terminal program icons: program=icon-name or program=glyph, comma separated",
+        "defaultValue": ""
+      }
+    ]
+  }
+}
