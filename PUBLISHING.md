@@ -23,6 +23,9 @@ Smoke-test the real install path:
     # then back to the dev symlink:
     omarchy plugin remove tjcelaya.workspace-icons --yes && ./install.sh
 
+Submitted 2026-10-06 as https://github.com/omacom/omarchy-plugin-marketplace/issues/10211.
+Editing the issue body re-runs validation against the current HEAD of main.
+
 Submission is a GitHub issue on omacom/omarchy-plugin-marketplace titled
 `[Plugin]: Workspace icons` with the body in `submission.md` (six headings in order, all five
 checklist boxes ticked). The form:
