@@ -28,7 +28,7 @@ import shutil
 import subprocess
 from urllib.parse import urlparse
 
-SHELLS = {"bash", "zsh", "fish", "sh", "dash", "nu", "xonsh", "elvish", "login", "sudo", "doas"}
+SHELLS = {"bash", "zsh", "fish", "sh", "dash", "nu", "xonsh", "elvish", "login"}
 
 # Nerd Font glyphs for common terminal programs. Settings can add to or override these.
 DEFAULT_PROGRAM_GLYPHS = {
