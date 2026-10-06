@@ -24,8 +24,8 @@ If [modelctl](https://github.com/tjcelaya/omarchy-modelctl) is installed, the ho
 also lists the coding agents running inside each terminal (herdr panes, or a plain terminal
 running claude/opencode/codex…) with their directory and status, and clicking an agent row
 jumps straight to its pane. In the bar, every terminal hosting agents wears one shared
-agent-host icon (`agentIcon`, default the bundled herdr logo) whether the agents run under herdr,
-tmux, or directly; otherwise the bar stays as it is, one icon per window.
+agent-host icon (`agentIcon`) whether the agents run under herdr, tmux, or directly;
+otherwise the bar stays as it is, one icon per window.
 
 This is a soft link, not a dependency. The helper runs `modelctl-agents` when it finds it on
 `PATH` or in `~/.config/omarchy/plugins/tjcelaya.modelctl/bin/`; without it the panel simply
@@ -104,16 +104,16 @@ Set with `omarchy bar set tjcelaya.workspace-icons <key> <value>`:
 | `pollSec` | `3` | terminal re-check interval |
 | `iconSize` | `14` | icon size in px |
 | `terminalClasses` | `foot,footclient,Alacritty,kitty,com.mitchellh.ghostty` | window classes treated as terminals |
-| `agentIcon` | `herdr` | icon for any terminal hosting agent sessions (herdr, tmux, or a bare agent): a program name, a glyph, or empty to keep the per-program icon |
+| `agentIcon` | `herdr` | icon for any terminal hosting agent sessions: a program name (bundled icons in `icons/` are checked first, see `NOTICE.md`), a glyph, or empty to keep the per-program icon |
 | `programIcons` | empty | `program=icon-name` or `program=glyph`, comma separated, e.g. `herdr=utilities-terminal,btop=󰍛` |
 
 Check what the helper sees with `bin/wsicons-state | jq`.
 
 ## Planned
 
-- A proper herdr icon. Today a terminal hosting agents wears a simplified herdr logo
-  (`icons/herdr.svg`, see `NOTICE.md`). tmux itself never gets an icon: it is transparent to the
-  program walk, so a tmux terminal shows the program inside it, or the terminal's own icon.
+- An icon of this plugin's own for terminals hosting agent sessions; `agentIcon` picks one
+  today. tmux never gets an icon: it is transparent to the program walk, so a tmux terminal
+  shows the program inside it, or the terminal's own icon.
 
 ## License
 
