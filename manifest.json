@@ -25,7 +25,8 @@
       "pollSec": 3,
       "iconSize": 14,
       "terminalClasses": "foot,footclient,Alacritty,kitty,com.mitchellh.ghostty",
-      "programIcons": ""
+      "programIcons": "",
+      "agentIcon": "herdr"
     },
     "schema": [
       {
@@ -75,6 +76,12 @@
         "type": "string",
         "label": "Terminal program icons: program=icon-name or program=glyph, comma separated",
         "defaultValue": ""
+      },
+      {
+        "key": "agentIcon",
+        "type": "string",
+        "label": "Icon for terminals hosting agent sessions: a program name from programIcons, a glyph, or empty for none",
+        "defaultValue": "herdr"
       }
     ]
   }

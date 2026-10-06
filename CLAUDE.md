@@ -16,6 +16,10 @@ omarchy-shell (Quickshell/QML) bar-widget plugin `tjcelaya.workspace-icons`.
   short grace period and while the panel itself is hovered.
 - Agent rows come from `modelctl-agents` (tjcelaya.modelctl) when it exists. Keep that a soft
   runtime probe in `bin/wsicons-state`; never add it to the manifest or require it.
+- Test agent/terminal detection without real agents: a copy of `sleep` named `claude`, or a
+  bash script named `herdr`, launched in `foot` (optionally under `tmux new-session`) and moved
+  aside with `hyprctl dispatch 'hl.dsp.window.move({ workspace = "6", window = "address:…", silent = true })'`.
+  Detection is by process name only. Don't `pkill -f` on the scratch path from the same shell.
 - Don't warp the user's cursor (`hyprctl dispatch movecursor`) to test hover while they're
   working; ask them to hover instead. A fullscreen window hides the bar entirely.
   Check errors with `quickshell log -p /usr/share/omarchy/shell | grep -v StatusNotifier`.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Print the windows on each Hyprland workspace, with an icon for each, as one JSON line.
 
-Usage: wsicons-state [--terminals foot,kitty,...] [--programs 'nvim=,btop=btop']
+Usage: wsicons-state [--terminals foot,kitty,...] [--programs 'nvim=,btop=btop'] [--agent-icon herdr]
 
 Output: {"windows": [{"ws": 1, "address": "0x...", "class": "foot", "title": "...",
                       "program": "herdr", "icon": "foot", "glyph": "",
@@ -146,14 +146,49 @@ def children_map(table):
     return children
 
 
-def terminal_program(pid, table, children, terminal_comm):
-    """Outermost non-shell descendant of a terminal, breadth first; None for a bare shell."""
+def tmux_pane_roots():
+    """tmux client pid -> pane pids of the session it is attached to. Processes inside tmux
+    hang off the tmux server, not the terminal, so the walk hops through the client."""
+    sessions = {}
+    for line in run_lines(["tmux", "list-panes", "-a", "-F", "#{session_name}\t#{pane_pid}"]):
+        parts = line.split("\t")
+        if len(parts) == 2 and parts[1].isdigit():
+            sessions.setdefault(parts[0], []).append(int(parts[1]))
+    roots = {}
+    for line in run_lines(["tmux", "list-clients", "-F", "#{client_pid}\t#{session_name}"]):
+        parts = line.split("\t")
+        if len(parts) == 2 and parts[0].isdigit():
+            roots[int(parts[0])] = sessions.get(parts[1], [])
+    return roots
+
+
+def run_lines(argv):
+    try:
+        return subprocess.run(argv, capture_output=True, text=True, timeout=3).stdout.splitlines()
+    except (OSError, subprocess.SubprocessError):
+        return []
+
+
+def terminal_program(pid, table, children, terminal_comm, tmux_roots):
+    """Outermost non-shell descendant of a terminal, breadth first; None for a bare shell.
+    tmux clients are transparent: the panes of their session are walked in their place."""
     frontier = sorted(children.get(pid, []))
+    seen = set()
     while frontier:
-        found = [p for p in frontier if table[p][1] not in SHELLS and table[p][1] != terminal_comm]
-        if found:
-            return table[found[0]][1]
-        frontier = sorted(c for p in frontier for c in children.get(p, []))
+        expanded = []
+        for p in frontier:
+            if p in seen:
+                continue
+            seen.add(p)
+            comm = table[p][1]
+            if p in tmux_roots:
+                expanded.extend(tmux_roots[p])
+            elif comm in SHELLS or comm == terminal_comm:
+                expanded.extend(children.get(p, []))
+            else:
+                # comm can carry a role suffix, e.g. "tmux: client".
+                return comm.split(":")[0].split()[0]
+        frontier = sorted(expanded)
     return None
 
 
@@ -186,6 +221,21 @@ def agents_by_window():
     return agents
 
 
+def apply_program_icon(window, program, overrides, index):
+    """Set the window's icon or glyph for a terminal program; `program` may itself be a glyph."""
+    override = overrides.get(program)
+    if override and ("/" in override or override.isascii()):
+        window["icon"], window["glyph"] = override, ""
+    elif override:
+        window["glyph"] = override
+    elif program.lower() in index[1] or program.lower() in index[2]:
+        window["icon"], window["glyph"] = index[1].get(program.lower()) or index[2][program.lower()], ""
+    elif program in DEFAULT_PROGRAM_GLYPHS:
+        window["glyph"] = DEFAULT_PROGRAM_GLYPHS[program]
+    elif not program.isascii():
+        window["glyph"] = program
+
+
 def parse_programs(raw):
     mapping = {}
     for item in re.split(r"[,\n]", raw or ""):
@@ -200,6 +250,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--terminals", default="foot,footclient,Alacritty,kitty,com.mitchellh.ghostty")
     parser.add_argument("--programs", default="")
+    parser.add_argument("--agent-icon", default="herdr",
+                        help="program name or glyph for terminals that host agent sessions; empty to disable")
     args = parser.parse_args()
 
     terminals = {t.strip().lower() for t in args.terminals.split(",") if t.strip()}
@@ -227,20 +279,17 @@ def main():
             if table is None:
                 table = process_table()
                 children = children_map(table)
+                tmux_roots = tmux_pane_roots()
             pid = client.get("pid", 0)
             terminal_comm = table.get(pid, (0, ""))[1]
-            program = terminal_program(pid, table, children, terminal_comm)
+            program = terminal_program(pid, table, children, terminal_comm, tmux_roots)
             if program:
                 window["program"] = program
-                override = program_overrides.get(program)
-                if override and ("/" in override or override.isascii()):
-                    window["icon"] = override
-                elif override:
-                    window["glyph"] = override
-                elif program.lower() in index[1] or program.lower() in index[2]:
-                    window["icon"] = index[1].get(program.lower()) or index[2][program.lower()]
-                elif program in DEFAULT_PROGRAM_GLYPHS:
-                    window["glyph"] = DEFAULT_PROGRAM_GLYPHS[program]
+                apply_program_icon(window, program, program_overrides, index)
+            # A terminal hosting agent sessions (herdr, tmux, or a bare agent) wears the
+            # agent-host icon so every such terminal looks the same in the bar.
+            if window["agents"] and args.agent_icon:
+                apply_program_icon(window, args.agent_icon, program_overrides, index)
         windows.append(window)
 
     print(json.dumps({"windows": windows}, ensure_ascii=False))

@@ -19,7 +19,9 @@ switcher. Each workspace shows its number followed by the icons of the apps open
 If [modelctl](https://github.com/tjcelaya/omarchy-modelctl) is installed, the hover panel
 also lists the coding agents running inside each terminal (herdr panes, or a plain terminal
 running claude/opencode/codex…) with their directory and status, and clicking an agent row
-jumps straight to its pane. The bar itself stays the same: one icon per window.
+jumps straight to its pane. In the bar, every terminal hosting agents wears one shared
+agent-host icon (`agentIcon`, default the herdr glyph) whether the agents run under herdr,
+tmux, or directly; otherwise the bar stays as it is, one icon per window.
 
 This is a soft link, not a dependency. The helper runs `modelctl-agents` when it finds it on
 `PATH` or in `~/.config/omarchy/plugins/tjcelaya.modelctl/bin/`; without it the panel simply
@@ -98,6 +100,7 @@ Set with `omarchy bar set tjcelaya.workspace-icons <key> <value>`:
 | `pollSec` | `3` | terminal re-check interval |
 | `iconSize` | `14` | icon size in px |
 | `terminalClasses` | `foot,footclient,Alacritty,kitty,com.mitchellh.ghostty` | window classes treated as terminals |
+| `agentIcon` | `herdr` | icon for any terminal hosting agent sessions (herdr, tmux, or a bare agent): a program name, a glyph, or empty to keep the per-program icon |
 | `programIcons` | empty | `program=icon-name` or `program=glyph`, comma separated, e.g. `herdr=utilities-terminal,btop=󰍛` |
 
 Check what the helper sees with `bin/wsicons-state | jq`.
