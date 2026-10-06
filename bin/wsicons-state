@@ -221,13 +221,29 @@ def agents_by_window():
     return agents
 
 
+ICON_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "icons")
+
+
+def bundled_icon(program):
+    """An icon shipped with the plugin in icons/<program>.svg|png, else None."""
+    for ext in ("svg", "png"):
+        path = os.path.normpath(os.path.join(ICON_DIR, program.lower() + "." + ext))
+        if os.path.isfile(path):
+            return path
+    return None
+
+
 def apply_program_icon(window, program, overrides, index):
-    """Set the window's icon or glyph for a terminal program; `program` may itself be a glyph."""
+    """Set the window's icon or glyph for a terminal program; `program` may itself be a glyph.
+    Order: user override, plugin-bundled icon, desktop entry, built-in glyph."""
     override = overrides.get(program)
+    bundled = bundled_icon(program)
     if override and ("/" in override or override.isascii()):
         window["icon"], window["glyph"] = override, ""
     elif override:
         window["glyph"] = override
+    elif bundled:
+        window["icon"], window["glyph"] = bundled, ""
     elif program.lower() in index[1] or program.lower() in index[2]:
         window["icon"], window["glyph"] = index[1].get(program.lower()) or index[2][program.lower()], ""
     elif program in DEFAULT_PROGRAM_GLYPHS:

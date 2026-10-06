@@ -20,7 +20,7 @@ If [modelctl](https://github.com/tjcelaya/omarchy-modelctl) is installed, the ho
 also lists the coding agents running inside each terminal (herdr panes, or a plain terminal
 running claude/opencode/codex…) with their directory and status, and clicking an agent row
 jumps straight to its pane. In the bar, every terminal hosting agents wears one shared
-agent-host icon (`agentIcon`, default the herdr glyph) whether the agents run under herdr,
+agent-host icon (`agentIcon`, default the bundled herdr logo) whether the agents run under herdr,
 tmux, or directly; otherwise the bar stays as it is, one icon per window.
 
 This is a soft link, not a dependency. The helper runs `modelctl-agents` when it finds it on
@@ -37,8 +37,8 @@ same desktop entries the Omarchy launcher uses:
 2. **Other apps**: `StartupWMClass`, then desktop-file id, then `Exec` binary.
 3. **Terminals** (classes listed in `terminalClasses`): the process tree under the terminal is
    walked breadth first, skipping shells, and the outermost program found (e.g. `herdr`, `nvim`)
-   gets an icon from `programIcons`, a desktop entry of the same name, or a built-in Nerd Font
-   glyph. A terminal with only a shell in it shows the terminal's own icon.
+   gets an icon from `programIcons`, an icon bundled in `icons/` (herdr's logo ships there, see
+   `NOTICE.md`), a desktop entry of the same name, or a built-in Nerd Font glyph. A terminal with only a shell in it shows the terminal's own icon.
 
 The widget turns icon names into images with Quickshell's themed icon lookup, falling back to
 `DesktopEntries.heuristicLookup` and then `application-x-executable`. It refreshes on Hyprland
