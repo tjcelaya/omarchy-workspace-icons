@@ -4,10 +4,14 @@ An omarchy-shell bar widget (`tjcelaya.workspace-icons`) that replaces the stock
 switcher. Each workspace shows its number followed by the icons of the apps open on it:
 
 ```
-1: [herdr] | 2: [omawrite] [discord] [signal] [terminal] | 3: [discord] | 4: [spotify] [brave] | 5: | 7: [brave]
+1: [teams] [signal] [solidtime] | 2: [herdr] [omawrite] | 3: [spotify] [solidtime] | 4: [discord] | 5: [brave]
 ```
 
-![the bar with workspace 2 hovered: its herdr terminal, the agents inside it, and two editor windows](preview.png)
+![the bar above, with workspace 2 hovered: its herdr terminal with the four agents inside it, then its two Omawrite windows](preview.png)
+
+In the preview, workspace 2 is focused and hovered. Its terminal runs herdr, so it wears the
+herdr icon in the bar, and the panel lists the agents inside it; the two Omawrite windows
+collapse to one icon in the bar but each get a row in the panel.
 
 - The focused workspace's number is highlighted and underlined; empty workspaces are dimmed.
 - Click a workspace to focus it.
