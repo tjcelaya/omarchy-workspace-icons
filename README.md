@@ -107,8 +107,9 @@ Check what the helper sees with `bin/wsicons-state | jq`.
 
 ## Planned
 
-- Proper icons for herdr and tmux terminals. Today a terminal hosting agents wears a
-  simplified herdr logo (`icons/herdr.svg`, see `NOTICE.md`) and tmux falls back to a glyph.
+- A proper herdr icon. Today a terminal hosting agents wears a simplified herdr logo
+  (`icons/herdr.svg`, see `NOTICE.md`). tmux itself never gets an icon: it is transparent to the
+  program walk, so a tmux terminal shows the program inside it, or the terminal's own icon.
 
 ## License
 

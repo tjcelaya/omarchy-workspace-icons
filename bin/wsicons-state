@@ -43,7 +43,6 @@ DEFAULT_PROGRAM_GLYPHS = {
     "lazygit": "",
     "lazydocker": "",
     "git": "",
-    "tmux": "",
     "ssh": "\U000f08c0",
     "k9s": "\U000f10fe",
     "yazi": "\U000f024b",
