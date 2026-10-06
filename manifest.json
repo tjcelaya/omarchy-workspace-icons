@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "tjcelaya.workspace-icons",
   "name": "Workspace icons",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "tjcelaya",
   "license": "MIT",
   "description": "Workspace switcher that shows each workspace's number followed by the icons of the apps open on it.",
