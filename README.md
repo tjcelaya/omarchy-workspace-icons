@@ -105,6 +105,11 @@ Set with `omarchy bar set tjcelaya.workspace-icons <key> <value>`:
 
 Check what the helper sees with `bin/wsicons-state | jq`.
 
+## Planned
+
+- Proper icons for herdr and tmux terminals. Today a terminal hosting agents wears a
+  simplified herdr logo (`icons/herdr.svg`, see `NOTICE.md`) and tmux falls back to a glyph.
+
 ## License
 
 MIT.
