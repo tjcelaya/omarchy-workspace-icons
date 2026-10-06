@@ -7,7 +7,7 @@ switcher. Each workspace shows its number followed by the icons of the apps open
 1: [herdr] | 2: [omawrite] [discord] [signal] [terminal] | 3: [discord] | 4: [spotify] [brave] | 5: | 7: [brave]
 ```
 
-![preview](preview.png)
+![the bar with workspace 2 hovered: its herdr terminal, the agents inside it, and two editor windows](preview.png)
 
 - The focused workspace's number is highlighted and underlined; empty workspaces are dimmed.
 - Click a workspace to focus it.
