@@ -9,8 +9,8 @@ switcher. Each workspace shows its number followed by the icons of the apps open
 
 ![the bar above, with workspace 2 hovered: its herdr terminal with the four agents inside it, then its two Omawrite windows](preview.png)
 
-In the preview, workspace 2 is focused and hovered. Its terminal runs herdr, so it wears the
-herdr icon in the bar, and the panel lists the agents inside it; the two Omawrite windows
+In the preview, workspace 2 is focused and hovered. Its terminal hosts agent sessions, so it
+wears the agent-host icon in the bar, and the panel lists them; the two Omawrite windows
 collapse to one icon in the bar but each get a row in the panel.
 
 - The focused workspace's number is highlighted and underlined; empty workspaces are dimmed.
