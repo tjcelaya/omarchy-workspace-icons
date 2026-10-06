@@ -41,8 +41,8 @@ same desktop entries the Omarchy launcher uses:
 2. **Other apps**: `StartupWMClass`, then desktop-file id, then `Exec` binary.
 3. **Terminals** (classes listed in `terminalClasses`): the process tree under the terminal is
    walked breadth first, skipping shells, and the outermost program found (e.g. `herdr`, `nvim`)
-   gets an icon from `programIcons`, an icon bundled in `icons/` (herdr's logo ships there, see
-   `NOTICE.md`), a desktop entry of the same name, or a built-in Nerd Font glyph. A terminal with only a shell in it shows the terminal's own icon.
+   gets an icon from `programIcons`, a desktop entry of the same name, or a built-in Nerd Font
+   glyph. A terminal with only a shell in it shows the terminal's own icon.
 
 The widget turns icon names into images with Quickshell's themed icon lookup, falling back to
 `DesktopEntries.heuristicLookup` and then `application-x-executable`. It refreshes on Hyprland
@@ -104,16 +104,13 @@ Set with `omarchy bar set tjcelaya.workspace-icons <key> <value>`:
 | `pollSec` | `3` | terminal re-check interval |
 | `iconSize` | `14` | icon size in px |
 | `terminalClasses` | `foot,footclient,Alacritty,kitty,com.mitchellh.ghostty` | window classes treated as terminals |
-| `agentIcon` | `herdr` | icon for any terminal hosting agent sessions: a program name (bundled icons in `icons/` are checked first, see `NOTICE.md`), a glyph, or empty to keep the per-program icon |
-| `programIcons` | empty | `program=icon-name` or `program=glyph`, comma separated, e.g. `herdr=utilities-terminal,btop=󰍛` |
+| `agentIcon` | `󰙴` | icon for any terminal hosting agent sessions: a glyph, a program name, or empty to keep the per-program icon |
+| `programIcons` | empty | `program=icon-name` or `program=glyph`, comma separated, e.g. `nvim=nvim,btop=󰍛` |
 
 Check what the helper sees with `bin/wsicons-state | jq`.
 
-## Planned
-
-- An icon of this plugin's own for terminals hosting agent sessions; `agentIcon` picks one
-  today. tmux never gets an icon: it is transparent to the program walk, so a tmux terminal
-  shows the program inside it, or the terminal's own icon.
+tmux never gets an icon of its own: it is transparent to the program walk, so a tmux terminal
+shows the program inside it, or the terminal's own icon.
 
 ## License
 

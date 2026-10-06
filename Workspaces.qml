@@ -292,7 +292,7 @@ BarWidget {
       "python3", root.stateScript,
       "--terminals", String(root.setting("terminalClasses", "foot,footclient,Alacritty,kitty,com.mitchellh.ghostty")),
       "--programs", String(root.setting("programIcons", "")),
-      "--agent-icon", String(root.setting("agentIcon", "herdr"))
+      "--agent-icon", String(root.setting("agentIcon", "\uDB81\uDE74"))
     ]
     stdout: StdioCollector {
       onStreamFinished: {

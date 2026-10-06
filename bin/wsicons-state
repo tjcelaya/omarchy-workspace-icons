@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Print the windows on each Hyprland workspace, with an icon for each, as one JSON line.
 
-Usage: wsicons-state [--terminals foot,kitty,...] [--programs 'nvim=,btop=btop'] [--agent-icon herdr]
+Usage: wsicons-state [--terminals foot,kitty,...] [--programs 'nvim=,btop=btop'] [--agent-icon 󰙴]
 
 Output: {"windows": [{"ws": 1, "address": "0x...", "class": "foot", "title": "...",
                       "program": "herdr", "icon": "foot", "glyph": "",
@@ -220,29 +220,14 @@ def agents_by_window():
     return agents
 
 
-ICON_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "icons")
-
-
-def bundled_icon(program):
-    """An icon shipped with the plugin in icons/<program>.svg|png, else None."""
-    for ext in ("svg", "png"):
-        path = os.path.normpath(os.path.join(ICON_DIR, program.lower() + "." + ext))
-        if os.path.isfile(path):
-            return path
-    return None
-
-
 def apply_program_icon(window, program, overrides, index):
     """Set the window's icon or glyph for a terminal program; `program` may itself be a glyph.
-    Order: user override, plugin-bundled icon, desktop entry, built-in glyph."""
+    Order: user override, desktop entry, built-in glyph."""
     override = overrides.get(program)
-    bundled = bundled_icon(program)
     if override and ("/" in override or override.isascii()):
         window["icon"], window["glyph"] = override, ""
     elif override:
         window["glyph"] = override
-    elif bundled:
-        window["icon"], window["glyph"] = bundled, ""
     elif program.lower() in index[1] or program.lower() in index[2]:
         window["icon"], window["glyph"] = index[1].get(program.lower()) or index[2][program.lower()], ""
     elif program in DEFAULT_PROGRAM_GLYPHS:
@@ -265,7 +250,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--terminals", default="foot,footclient,Alacritty,kitty,com.mitchellh.ghostty")
     parser.add_argument("--programs", default="")
-    parser.add_argument("--agent-icon", default="herdr",
+    parser.add_argument("--agent-icon", default="\U000f0674",
                         help="program name or glyph for terminals that host agent sessions; empty to disable")
     args = parser.parse_args()
 
@@ -301,8 +286,8 @@ def main():
             if program:
                 window["program"] = program
                 apply_program_icon(window, program, program_overrides, index)
-            # A terminal hosting agent sessions (herdr, tmux, or a bare agent) wears the
-            # agent-host icon so every such terminal looks the same in the bar.
+            # A terminal hosting agent sessions wears the agent-host icon, whatever
+            # multiplexer or none sits between it and the agents.
             if window["agents"] and args.agent_icon:
                 apply_program_icon(window, args.agent_icon, program_overrides, index)
         windows.append(window)
