@@ -26,7 +26,8 @@
       "iconSize": 14,
       "terminalClasses": "foot,footclient,Alacritty,kitty,com.mitchellh.ghostty",
       "programIcons": "",
-      "agentIcon": "󰙴"
+      "agentIcon": "󰙴",
+      "perMonitor": false
     },
     "schema": [
       {
@@ -34,6 +35,12 @@
         "type": "string",
         "label": "Workspaces always shown, even when empty (e.g. 1-5 or 1,2,3)",
         "defaultValue": "1-5"
+      },
+      {
+        "key": "perMonitor",
+        "type": "boolean",
+        "label": "Show only the workspaces on this bar's monitor",
+        "defaultValue": false
       },
       {
         "key": "separator",

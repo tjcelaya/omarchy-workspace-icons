@@ -24,11 +24,20 @@ BarWidget {
   readonly property int pollSec: Math.max(1, Number(root.setting("pollSec", 3)) || 3)
   readonly property int iconSize: Math.max(10, Number(root.setting("iconSize", 14)) || 14)
   readonly property var persistentIds: parseIds(String(root.setting("persistentWorkspaces", "1-5")))
+  // "omarchy bar set" stores true as the string "true" unless --json is given.
+  readonly property bool perMonitor: isTrue(root.setting("perMonitor", false))
+  // Hyprland monitor of the bar surface this instance lives on (one bar per monitor).
+  readonly property var screenMonitor: root.QsWindow.window && root.QsWindow.window.screen
+    ? Hyprland.monitorFor(root.QsWindow.window.screen) : null
   readonly property color textColor: bar && bar.barForeground ? bar.barForeground : Color.bar.text
   readonly property color activeColor: bar && bar.urgent ? bar.urgent : Color.bar.active
 
   // [{ws, class, title, program, icon, glyph}] from the last helper run.
   property var windows: []
+
+  function isTrue(value) {
+    return value === true || String(value).trim().toLowerCase() === "true"
+  }
 
   function parseIds(raw) {
     var ids = []
@@ -45,16 +54,40 @@ BarWidget {
     return ids
   }
 
+  // Names of the outputs the shell draws a bar on. A mirrored or disabled monitor has no
+  // wl_output, so Hyprland can leave a workspace on it that no bar would otherwise list.
+  function barOutputNames() {
+    var names = []
+    var screens = Quickshell.screens
+    for (var i = 0; i < screens.length; i++) names.push(screens[i].name)
+    return names
+  }
+
+  // With perMonitor, a workspace that lives on another monitor with a bar is left to that
+  // bar; a persistent workspace that does not exist yet shows on every bar.
   function workspaceIds() {
-    var ids = root.persistentIds.slice()
+    var elsewhere = []
+    var ids = []
+    var outputs = root.perMonitor ? barOutputNames() : []
     var values = Hyprland.workspaces.values
     for (var i = 0; i < values.length; i++) {
       var id = values[i].id
-      if (id > 0 && ids.indexOf(id) === -1) ids.push(id)
+      if (id <= 0) continue
+      var monitor = values[i].monitor
+      if (root.perMonitor && root.screenMonitor && monitor && monitor.name !== root.screenMonitor.name
+          && outputs.indexOf(monitor.name) !== -1) {
+        elsewhere.push(id)
+      } else if (ids.indexOf(id) === -1) {
+        ids.push(id)
+      }
+    }
+    for (var p = 0; p < root.persistentIds.length; p++) {
+      var pid = root.persistentIds[p]
+      if (ids.indexOf(pid) === -1 && elsewhere.indexOf(pid) === -1) ids.push(pid)
     }
     for (var j = 0; j < root.windows.length; j++) {
       var ws = root.windows[j].ws
-      if (ws > 0 && ids.indexOf(ws) === -1) ids.push(ws)
+      if (ws > 0 && ids.indexOf(ws) === -1 && elsewhere.indexOf(ws) === -1) ids.push(ws)
     }
     ids.sort(function(left, right) { return left - right })
     return ids
